@@ -7,7 +7,7 @@ namespace DemoAutofac
     // don't really "care" how the Write operation
     // happens, just that we can write.
     public interface IOutput
-    {
+    {        
         void Write(string content);
     }
 
@@ -50,6 +50,22 @@ namespace DemoAutofac
         public void WriteDate()
         {
             this._output.Write(DateTime.Today.ToShortDateString());
+        }
+    }
+
+    public class SpecificDayWriter : IDateWriter
+    {
+        private IOutput _output;
+        DateTime localDate = new DateTime();
+        public SpecificDayWriter(IOutput output, DateTime specificDate)
+        {
+            this._output = output;
+            localDate = specificDate ;
+        }
+
+        public void WriteDate()
+        {
+            this._output.Write(localDate.ToShortDateString());
         }
     }
 }

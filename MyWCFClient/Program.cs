@@ -15,7 +15,11 @@ namespace MyWCFClient
             // use it, then dispose of the scope.
             using (var scope = Container.BeginLifetimeScope())
             {
-                var writer = scope.Resolve<IDateWriter>();
+               var todayWriter = scope.Resolve<IDateWriter>();
+               var writer = scope.Resolve<SpecificDayWriter>(
+                    new TypedParameter(typeof(DateTime),DateTime.Now.AddDays(1))
+                    );
+                todayWriter.WriteDate();
                 writer.WriteDate();
             }
         }
@@ -57,6 +61,7 @@ namespace MyWCFClient
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleOutput>().As<IOutput>();
             builder.RegisterType<TodayWriter>().As<IDateWriter>();
+            builder.RegisterType<SpecificDayWriter>();
             Container = builder.Build();
 
             // The WriteDate method is where we'll make use
